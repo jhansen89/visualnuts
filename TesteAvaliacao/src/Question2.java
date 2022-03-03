@@ -55,6 +55,73 @@ public class Question2 {
 		
 	}
 	
+	private static Info getCountryMostOficialSpeakLang(List<Info> lista){
+		
+		Integer numberOfLang = 0;
+		Info country = new Info();
+		Integer count=0;
+		while(count < lista.size()) {
+				if(numberOfLang < lista.get(count).getLanguages().size()){
+					numberOfLang = lista.get(count).getLanguages().size();
+					country = lista.get(count);
+				}
+			
+			count++;
+		}
+		return country;
+		
+	}
+
+	private static String getMostCommonOficialLangSpoken(List<Info> lista){
+		
+		Boolean pass = true;
+		String[] mostCommonLang = new String[2];
+		mostCommonLang[0] = "";
+		mostCommonLang[1] = "0";
+		
+		List<String[]> InfoLang= new ArrayList<String[]>();
+		Integer count=0;
+		while(count < lista.size()) {
+			for(int i=0; i < lista.get(count).getLanguages().size();i++) {
+				
+				if (InfoLang.size() == 0) {
+					InfoLang.add(new String[2]);
+					InfoLang.get(0)[0] = lista.get(count).getLanguages().get(i);
+					InfoLang.get(0)[1] = "1";
+				}else {
+					for(int j=0 ; j < InfoLang.size(); j++) {
+						if(lista.get(count).getLanguages().get(i).contains(InfoLang.get(j)[0])) {
+							InfoLang.get(j)[1] = "" + (Integer.parseInt(InfoLang.get(j)[1])+1);
+							pass = false;
+							break;
+						}
+					}
+					if (pass) {
+						InfoLang.add(new String[2]);
+						InfoLang.get(InfoLang.size()-1)[0] = lista.get(count).getLanguages().get(i);
+						InfoLang.get(InfoLang.size()-1)[1] = "1";
+					}
+				}
+			}
+		
+			count++;
+		}
+		
+		String Final = "";
+		
+		for(String[] l : InfoLang) {
+			if(Integer.parseInt(mostCommonLang[1]) < Integer.parseInt(l[1])){
+				mostCommonLang = l;
+				Final = l[0];
+			}else if (Integer.parseInt(mostCommonLang[1]) == Integer.parseInt(l[1])) {
+				Final += ", "+l[0];
+			}
+		}
+		
+		return Final;
+		
+	}
+	
 
 	public static void main(String[] args) {
 		
@@ -84,12 +151,14 @@ public class Question2 {
 			}
 			
 			System.out.println(" Number of countries: " + getNumberofCountries(lista));
-			System.out.println(" The country with most official languages spoken: " + getCountryMostOficialSpeakDe(lista));
+			System.out.println(" The country with most official languages spoken (DE): " + getCountryMostOficialSpeakDe(lista));
 			System.out.println(" The count of the official languages spoken: " + getNumberOfOficialLanguagesSpoken(lista));
+			System.out.println(" The country with most official languages spoken: " + getCountryMostOficialSpeakLang(lista));
+			System.out.println(" The most common Language of all countries: " + getMostCommonOficialLangSpoken(lista));
 			
 
 		}
-		//Trata as exceptions que podem ser lançadas no decorrer do processo
+		//Trata as exceptions que podem ser lanÃ§adas no decorrer do processo
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
